@@ -18,6 +18,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 }
 
 // Example of retrieving all fences
+
 $fences = $employee->findAllFences();
 ?>
 
@@ -65,15 +66,19 @@ $fences = $employee->findAllFences();
 <div class="container">
     <h2>Fences</h2>
     <ul>
-        <?php foreach ($fences as $fence): ?>
+    <?php foreach ($fences as $fence): ?>
             <li>
-                Fence Type:
-                <?php echo $fence->getFenceType(); ?><br>
-                Filthy:
-                <?php echo $fence->isFilthy() ? 'Yes' : 'No'; ?><br>
-                Number of Animals:
-                <?php echo $fence->getNumberOfAnimal(); ?>/
-                <?php echo $fence->getMaxCapacity(); ?>
+                <div class="fence-info">
+                    <div class="fence-image">
+                        <img src="<?php echo $fence->getPicture(); ?>" alt="<?php echo $fence->getFenceType(); ?>">
+                    </div>
+                    <div class="fence-details">
+                        <p>Fence Type: <?php echo $fence->getFenceType(); ?></p>
+                        <p>Filthy: <?php echo $fence->isFilthy() ? 'Yes' : 'No'; ?></p>
+                        <p>Number of Animals: <?php echo $fence->getNumberOfAnimal(); ?>/<?php echo $fence->getMaxCapacity(); ?></p>
+                        <a href="view-fence.php?fence_id=<?php echo $fence->getId(); ?>" class="btn btn-primary">Visiter l'enclos</a>
+                    </div>
+                </div>
                 <hr>
             </li>
         <?php endforeach; ?>

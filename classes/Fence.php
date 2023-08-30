@@ -7,10 +7,16 @@ class Fence
     protected bool $filthy;
     protected int $numberOfAnimal;
     public int $maxCapacity;
+    private $db;
+
+    public function setDb(PDO $db){
+        $this->db = $db;
+    }
 
 
-    public function __construct(array $data = []) {
+    public function __construct(array $data = [], PDO $db = null) {
         $this->maxCapacity = 6; // Set the default max capacity
+        $this->db = $db; // Set the $db property
         
         if (!empty($data)) {
             $this->id = $data['id'];
@@ -22,20 +28,37 @@ class Fence
             $this->id = 0;
             $this->fenceType = "Meadow";
             $this->filthy = false;
-            $this->numberOfAnimal = 0;
         }
     }
 
+    public function getPicture(): string
+    {
+        // Replace this with actual logic to get the picture path based on the fence type
+        // For example:
+        if ($this->fenceType === "Meadow") {
+            return "images/meadowbg.png";
+        } elseif ($this->fenceType === "FlyCage") {
+            return "images/flycagebg.jpg";
+        } elseif ($this->fenceType === "PondFence") {
+            return "images/pondfencebg.png";
+        } else {
+            return "images/meadowbg.png";
+        }
+    }
     /**
      * Calculate the numberOfAnimal based on the given fence ID
      */
     protected function calculateNumberOfAnimal($fenceId) {
-        // You will need to implement logic to count the number of animals
-        // with the corresponding fences_id and update numberOfAnimal accordingly.
-        // This could involve a database query to count animals with the given fences_id.
-        // For now, we'll simply set it to a default value.
-        $this->numberOfAnimal = 0; // Replace with actual logic to calculate the count
+        $query = $this->db->prepare('SELECT COUNT(*) FROM animals WHERE fences_id = :fenceId');
+        $query->bindValue(':fenceId', $fenceId, PDO::PARAM_INT);
+        $query->execute();
+        $this->numberOfAnimal = (int) $query->fetchColumn();
     }
+
+    public function incrementNumberOfAnimal() {
+        $this->numberOfAnimal++;
+    }
+    
 
     /**
      * Get the value of id

@@ -170,7 +170,7 @@ class Animal
     /**
      * Set the value of name
      */
-    public function setName(string $name): self
+    public function setSpeciesName(string $name): self
     {
         $this->speciesName = $name;
 
